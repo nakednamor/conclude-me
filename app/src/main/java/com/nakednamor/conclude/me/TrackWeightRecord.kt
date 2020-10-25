@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import com.nakednamor.conclude.me.weight.*
@@ -13,8 +13,8 @@ import java.time.LocalTime
 
 class TrackWeightRecord : Fragment() {
 
-    private lateinit var datePickerButton: Button
-    private lateinit var timePickerButton: Button
+    private lateinit var datePickerField: TextView
+    private lateinit var timePickerField: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,35 +29,35 @@ class TrackWeightRecord : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_track_weight_record, container, false)
 
-        initializeDatePickerButton(view)
-        initializeTimePickerButton(view)
+        initializeDatePicker(view)
+        initializeTimePicker(view)
 
         return view
     }
 
-    private fun initializeDatePickerButton(view: View) {
-        datePickerButton = view.findViewById(R.id.trackWeightInputDatePicker)
+    private fun initializeDatePicker(view: View) {
+        datePickerField = view.findViewById(R.id.trackWeightInputDatePicker)
         val now = LocalDate.now()
         setDatePickerButtonText(now.year, now.monthValue, now.dayOfMonth)
-        datePickerButton.setOnClickListener {
+        datePickerField.setOnClickListener {
             val newFragment =
                 DatePickerFragment.newInstance(now.year, now.monthValue, now.dayOfMonth)
             newFragment.show(parentFragmentManager, "weightDatePicker")
         }
     }
 
-    private fun initializeTimePickerButton(view: View) {
-        timePickerButton = view.findViewById(R.id.trackWeightInputTimePicker)
+    private fun initializeTimePicker(view: View) {
+        timePickerField = view.findViewById(R.id.trackWeightInputTimePicker)
         val now = LocalTime.now()
         setTimePickerButtonText(now.hour, now.minute)
-        timePickerButton.setOnClickListener {
+        timePickerField.setOnClickListener {
             val newFragment = TimePickerFragment.newInstance(now.hour, now.minute)
             newFragment.show(parentFragmentManager, "weightTimePicker")
         }
     }
 
     private fun setDatePickerButtonText(year: Int, month: Int, day: Int) {
-        datePickerButton.text = getString(R.string.date_picker_text, year, month, day)
+        datePickerField.text = getString(R.string.date_picker_text, year, month, day)
     }
 
     private fun initializeDatePickerResultListener() =
@@ -71,7 +71,7 @@ class TrackWeightRecord : Fragment() {
 
 
     private fun setTimePickerButtonText(hour: Int, minute: Int) {
-        timePickerButton.text = getString(R.string.time_picker_text, hour, minute)
+        timePickerField.text = getString(R.string.time_picker_text, hour, minute)
     }
 
     private fun initializeTimePickerResultListener() =

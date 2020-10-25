@@ -12,7 +12,7 @@ import java.time.LocalDate
 const val ARG_PARAM_YEAR = "year"
 const val ARG_PARAM_MONTH = "month"
 const val ARG_PARAM_DAY = "day"
-const val RESULT_KEY = "pickedDate" // TODO rename to RESULT_KEY_DATE
+const val RESULT_KEY_DATE = "pickedDate"
 
 class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
 
@@ -44,7 +44,7 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener 
 
     override fun onDateSet(view: DatePicker?, pickedYear: Int, pickedMonth: Int, pickedDay: Int) {
         setFragmentResult(
-            RESULT_KEY,
+            RESULT_KEY_DATE,
             bundleOf(
                 ARG_PARAM_YEAR to pickedYear,
                 ARG_PARAM_MONTH to pickedMonth,

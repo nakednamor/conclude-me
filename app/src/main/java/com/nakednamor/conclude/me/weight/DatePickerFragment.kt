@@ -12,7 +12,7 @@ import java.time.LocalDate
 const val ARG_PARAM_YEAR = "year"
 const val ARG_PARAM_MONTH = "month"
 const val ARG_PARAM_DAY = "day"
-const val RESULT_KEY = "pickedDate"
+const val RESULT_KEY = "pickedDate" // TODO rename to RESULT_KEY_DATE
 
 class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
 

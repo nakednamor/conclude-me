@@ -8,13 +8,13 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import com.nakednamor.conclude.me.weight.*
-import java.time.LocalDate
-import java.time.LocalTime
+import java.time.LocalDateTime
 
 class TrackWeightRecord : Fragment() {
 
     private lateinit var datePickerField: TextView
     private lateinit var timePickerField: TextView
+    private var now = LocalDateTime.now()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +37,6 @@ class TrackWeightRecord : Fragment() {
 
     private fun initializeDatePicker(view: View) {
         datePickerField = view.findViewById(R.id.trackWeightInputDatePicker)
-        val now = LocalDate.now()
         setDatePickerButtonText(now.year, now.monthValue, now.dayOfMonth)
         datePickerField.setOnClickListener {
             val newFragment =
@@ -48,7 +47,6 @@ class TrackWeightRecord : Fragment() {
 
     private fun initializeTimePicker(view: View) {
         timePickerField = view.findViewById(R.id.trackWeightInputTimePicker)
-        val now = LocalTime.now()
         setTimePickerButtonText(now.hour, now.minute)
         timePickerField.setOnClickListener {
             val newFragment = TimePickerFragment.newInstance(now.hour, now.minute)
@@ -57,7 +55,12 @@ class TrackWeightRecord : Fragment() {
     }
 
     private fun setDatePickerButtonText(year: Int, month: Int, day: Int) {
-        datePickerField.text = getString(R.string.date_picker_text, year, month, day)
+        datePickerField.text = getString(
+            R.string.date_picker_text,
+            year,
+            prependZeroIfNeeded(month),
+            prependZeroIfNeeded(day)
+        )
     }
 
     private fun initializeDatePickerResultListener() =
@@ -71,7 +74,11 @@ class TrackWeightRecord : Fragment() {
 
 
     private fun setTimePickerButtonText(hour: Int, minute: Int) {
-        timePickerField.text = getString(R.string.time_picker_text, hour, minute)
+        timePickerField.text = getString(
+            R.string.time_picker_text,
+            prependZeroIfNeeded(hour),
+            prependZeroIfNeeded(minute)
+        )
     }
 
     private fun initializeTimePickerResultListener() =
@@ -81,4 +88,6 @@ class TrackWeightRecord : Fragment() {
 
             setTimePickerButtonText(hour, minute)
         }
+
+    private fun prependZeroIfNeeded(value: Int): String = if (value <= 9) "0$value" else "$value"
 }

@@ -37,10 +37,20 @@
         android:layout_height="46dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:inputType="none"
         android:clickable="true"
         android:focusable="false"
+        android:inputType="none"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/trackWeightInputDatePicker" />
+
+    <Button
+        android:id="@+id/trackWeightInputButton"
+        android:layout_width="180dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/track_weight_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/trackWeightInputTimePicker" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

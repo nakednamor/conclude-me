@@ -17,7 +17,6 @@ import com.nakednamor.conclude.me.data.weight.WeightDao
 import com.nakednamor.conclude.me.data.weight.WeightRecord
 import com.nakednamor.conclude.me.weight.*
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import java.time.LocalDateTime
 
 class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListener {
@@ -126,9 +125,20 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
 
     private fun insertWeightRecord() {
         val weight = weightInput.text.toString()    // TODO check if input valid
+        val dateString = datePickerField.text
+        val timeString = timePickerField.text
+
+        val dateTime = LocalDateTime.of(
+            dateString.split("-")[0].toInt(),
+            dateString.split("-")[1].toInt(),
+            dateString.split("-")[2].toInt(),
+            timeString.split(":")[0].toInt(),
+            timeString.split(":")[1].toInt()
+        )
+
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                weightDao.insertWeightRecord(WeightRecord(weight = weight.toFloat()))
+                weightDao.insertWeightRecord(WeightRecord(weight = weight.toFloat(), recordedAt = dateTime))
                 Toast.makeText(context, "weight saved", Toast.LENGTH_SHORT).show()
             } catch (ex: Exception) {
                 Toast.makeText(context, "error while saving weight: " + ex.message, Toast.LENGTH_SHORT).show()

@@ -17,7 +17,7 @@ import com.nakednamor.conclude.me.weight.*
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
-class TrackWeightRecord : Fragment() {
+class TrackWeightRecord : Fragment(), View.OnClickListener {
 
     private lateinit var datePickerField: TextView
     private lateinit var timePickerField: TextView
@@ -54,20 +54,13 @@ class TrackWeightRecord : Fragment() {
     private fun initializeDatePicker(view: View) {
         datePickerField = view.findViewById(R.id.trackWeightInputDatePicker)
         setDatePickerButtonText(now.year, now.monthValue, now.dayOfMonth)
-        datePickerField.setOnClickListener {
-            val newFragment =
-                DatePickerFragment.newInstance(now.year, now.monthValue, now.dayOfMonth)
-            newFragment.show(parentFragmentManager, "weightDatePicker")
-        }
+        datePickerField.setOnClickListener(this)
     }
 
     private fun initializeTimePicker(view: View) {
         timePickerField = view.findViewById(R.id.trackWeightInputTimePicker)
         setTimePickerButtonText(now.hour, now.minute)
-        timePickerField.setOnClickListener {
-            val newFragment = TimePickerFragment.newInstance(now.hour, now.minute)
-            newFragment.show(parentFragmentManager, "weightTimePicker")
-        }
+        timePickerField.setOnClickListener(this)
     }
 
     private fun initializeWeightInput(view: View) {
@@ -76,13 +69,7 @@ class TrackWeightRecord : Fragment() {
 
     private fun initializeAddWeightButton(view: View) {
         addWeightButton = view.findViewById(R.id.trackWeightInputButton)
-        addWeightButton.setOnClickListener {
-            val weight = weightInput.text.toString()    // TODO check if input valid
-
-            viewLifecycleOwner.lifecycleScope.launch {
-                weightDao.insertWeightRecord(WeightRecord(weight = weight.toFloat()))
-            }
-        }
+        addWeightButton.setOnClickListener(this)
     }
 
     private fun setDatePickerButtonText(year: Int, month: Int, day: Int) {
@@ -103,7 +90,6 @@ class TrackWeightRecord : Fragment() {
             setDatePickerButtonText(year, month, day)
         }
 
-
     private fun setTimePickerButtonText(hour: Int, minute: Int) {
         timePickerField.text = getString(
             R.string.time_picker_text,
@@ -121,4 +107,17 @@ class TrackWeightRecord : Fragment() {
         }
 
     private fun prependZeroIfNeeded(value: Int): String = if (value <= 9) "0$value" else "$value"
+
+    override fun onClick(view: View) {
+        when (view.id) {
+            R.id.trackWeightInputDatePicker -> DatePickerFragment.newInstance(now.year, now.monthValue, now.dayOfMonth).show(parentFragmentManager, "weightDatePicker")
+            R.id.trackWeightInputTimePicker -> TimePickerFragment.newInstance(now.hour, now.minute).show(parentFragmentManager, "weightTimePicker")
+            R.id.trackWeightInputButton -> {
+                val weight = weightInput.text.toString()    // TODO check if input valid
+                viewLifecycleOwner.lifecycleScope.launch {
+                    weightDao.insertWeightRecord(WeightRecord(weight = weight.toFloat()))
+                }
+            }
+        }
+    }
 }

@@ -4,16 +4,28 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.lifecycleScope
+import com.nakednamor.conclude.me.data.AppDatabase
+import com.nakednamor.conclude.me.data.weight.WeightDao
+import com.nakednamor.conclude.me.data.weight.WeightRecord
 import com.nakednamor.conclude.me.weight.*
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 class TrackWeightRecord : Fragment() {
 
     private lateinit var datePickerField: TextView
     private lateinit var timePickerField: TextView
+    private lateinit var weightInput: EditText
+    private lateinit var addWeightButton: Button
+
+    private lateinit var weightDao: WeightDao
+
     private var now = LocalDateTime.now()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +33,8 @@ class TrackWeightRecord : Fragment() {
 
         initializeDatePickerResultListener()
         initializeTimePickerResultListener()
+
+        weightDao = AppDatabase.getInstance(requireContext()).weightDao()
     }
 
     override fun onCreateView(
@@ -31,6 +45,8 @@ class TrackWeightRecord : Fragment() {
 
         initializeDatePicker(view)
         initializeTimePicker(view)
+        initializeWeightInput(view)
+        initializeAddWeightButton(view)
 
         return view
     }
@@ -51,6 +67,21 @@ class TrackWeightRecord : Fragment() {
         timePickerField.setOnClickListener {
             val newFragment = TimePickerFragment.newInstance(now.hour, now.minute)
             newFragment.show(parentFragmentManager, "weightTimePicker")
+        }
+    }
+
+    private fun initializeWeightInput(view: View) {
+        weightInput = view.findViewById(R.id.trackWeightInputNumber)
+    }
+
+    private fun initializeAddWeightButton(view: View) {
+        addWeightButton = view.findViewById(R.id.trackWeightInputButton)
+        addWeightButton.setOnClickListener {
+            val weight = weightInput.text.toString()    // TODO check if input valid
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                weightDao.insertWeightRecord(WeightRecord(weight = weight.toFloat()))
+            }
         }
     }
 

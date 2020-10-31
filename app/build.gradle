@@ -16,6 +16,13 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+
     }
 
     buildTypes {
@@ -32,6 +39,8 @@ android {
         jvmTarget = '1.8'
     }
 }
+
+apply plugin: 'dagger.hilt.android.plugin'
 
 dependencies {
 
@@ -62,10 +71,14 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 
 
-
     def room_version = "2.2.5"
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
+
+    // dependency injection
+    def hilt_dagger_version = "2.28-alpha"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_dagger_version"
+    implementation "com.google.dagger:hilt-android:$hilt_dagger_version"
 }

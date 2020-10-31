@@ -16,9 +16,11 @@ import com.nakednamor.conclude.me.data.AppDatabase
 import com.nakednamor.conclude.me.data.weight.WeightDao
 import com.nakednamor.conclude.me.data.weight.WeightRecord
 import com.nakednamor.conclude.me.weight.*
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
+@AndroidEntryPoint
 class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListener {
 
     private lateinit var datePickerField: TextView

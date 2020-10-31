@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.setFragmentResultListener
@@ -16,6 +17,7 @@ import com.nakednamor.conclude.me.data.weight.WeightDao
 import com.nakednamor.conclude.me.data.weight.WeightRecord
 import com.nakednamor.conclude.me.weight.*
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import java.time.LocalDateTime
 
 class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListener {
@@ -100,12 +102,7 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
         when (view.id) {
             R.id.trackWeightInputDatePicker -> DatePickerFragment.newInstance(now.year, now.monthValue, now.dayOfMonth).show(parentFragmentManager, "weightDatePicker")
             R.id.trackWeightInputTimePicker -> TimePickerFragment.newInstance(now.hour, now.minute).show(parentFragmentManager, "weightTimePicker")
-            R.id.trackWeightInputButton -> {
-                val weight = weightInput.text.toString()    // TODO check if input valid
-                viewLifecycleOwner.lifecycleScope.launch {
-                    weightDao.insertWeightRecord(WeightRecord(weight = weight.toFloat()))
-                }
-            }
+            R.id.trackWeightInputButton -> this.insertWeightRecord()
         }
     }
 
@@ -123,6 +120,18 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
                 val day = bundle.getInt(ARG_PARAM_DAY)
 
                 setDatePickerButtonText(year, month, day)
+            }
+        }
+    }
+
+    private fun insertWeightRecord() {
+        val weight = weightInput.text.toString()    // TODO check if input valid
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                weightDao.insertWeightRecord(WeightRecord(weight = weight.toFloat()))
+                Toast.makeText(context, "weight saved", Toast.LENGTH_SHORT).show()
+            } catch (ex: Exception) {
+                Toast.makeText(context, "error while saving weight: " + ex.message, Toast.LENGTH_SHORT).show()
             }
         }
     }

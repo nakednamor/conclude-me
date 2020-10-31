@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import com.nakednamor.conclude.me.data.AppDatabase
@@ -17,7 +18,7 @@ import com.nakednamor.conclude.me.weight.*
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
-class TrackWeightRecord : Fragment(), View.OnClickListener {
+class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListener {
 
     private lateinit var datePickerField: TextView
     private lateinit var timePickerField: TextView
@@ -81,14 +82,7 @@ class TrackWeightRecord : Fragment(), View.OnClickListener {
         )
     }
 
-    private fun initializeDatePickerResultListener() =
-        setFragmentResultListener(RESULT_KEY_DATE) { _, bundle ->
-            val year = bundle.getInt(ARG_PARAM_YEAR)
-            val month = bundle.getInt(ARG_PARAM_MONTH)
-            val day = bundle.getInt(ARG_PARAM_DAY)
-
-            setDatePickerButtonText(year, month, day)
-        }
+    private fun initializeDatePickerResultListener() = setFragmentResultListener(RESULT_KEY_DATE, this::onFragmentResult)
 
     private fun setTimePickerButtonText(hour: Int, minute: Int) {
         timePickerField.text = getString(
@@ -98,13 +92,7 @@ class TrackWeightRecord : Fragment(), View.OnClickListener {
         )
     }
 
-    private fun initializeTimePickerResultListener() =
-        setFragmentResultListener(RESULT_KEY_TIME) { _, bundle ->
-            val hour = bundle.getInt(ARG_PARAM_HOUR)
-            val minute = bundle.getInt(ARG_PARAM_MINUTE)
-
-            setTimePickerButtonText(hour, minute)
-        }
+    private fun initializeTimePickerResultListener() = setFragmentResultListener(RESULT_KEY_TIME, this::onFragmentResult)
 
     private fun prependZeroIfNeeded(value: Int): String = if (value <= 9) "0$value" else "$value"
 
@@ -117,6 +105,24 @@ class TrackWeightRecord : Fragment(), View.OnClickListener {
                 viewLifecycleOwner.lifecycleScope.launch {
                     weightDao.insertWeightRecord(WeightRecord(weight = weight.toFloat()))
                 }
+            }
+        }
+    }
+
+    override fun onFragmentResult(requestKey: String, bundle: Bundle) {
+        when (requestKey) {
+            RESULT_KEY_TIME -> {
+                val hour = bundle.getInt(ARG_PARAM_HOUR)
+                val minute = bundle.getInt(ARG_PARAM_MINUTE)
+
+                setTimePickerButtonText(hour, minute)
+            }
+            RESULT_KEY_DATE -> {
+                val year = bundle.getInt(ARG_PARAM_YEAR)
+                val month = bundle.getInt(ARG_PARAM_MONTH)
+                val day = bundle.getInt(ARG_PARAM_DAY)
+
+                setDatePickerButtonText(year, month, day)
             }
         }
     }

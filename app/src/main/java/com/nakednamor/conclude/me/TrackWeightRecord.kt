@@ -12,13 +12,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
-import com.nakednamor.conclude.me.data.AppDatabase
 import com.nakednamor.conclude.me.data.weight.WeightDao
 import com.nakednamor.conclude.me.data.weight.WeightRecord
 import com.nakednamor.conclude.me.weight.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListener {
@@ -28,7 +28,7 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
     private lateinit var weightInput: EditText
     private lateinit var addWeightButton: Button
 
-    private lateinit var weightDao: WeightDao
+    @Inject lateinit var weightDao: WeightDao
 
     private var now = LocalDateTime.now()
 
@@ -37,8 +37,6 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
 
         initializeDatePickerResultListener()
         initializeTimePickerResultListener()
-
-        weightDao = AppDatabase.getInstance(requireContext()).weightDao()
     }
 
     override fun onCreateView(

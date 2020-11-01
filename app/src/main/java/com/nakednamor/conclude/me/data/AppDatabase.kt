@@ -9,7 +9,7 @@ import com.nakednamor.conclude.me.DATABASE_NAME
 import com.nakednamor.conclude.me.data.weight.WeightDao
 import com.nakednamor.conclude.me.data.weight.WeightRecord
 
-@Database(entities = [WeightRecord::class], version = 2)
+@Database(entities = [WeightRecord::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -27,7 +27,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         private fun buildDatabase(context: Context): AppDatabase {
-            return Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME).fallbackToDestructiveMigration().build()
+            return Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME).build()
         }
     }
 }

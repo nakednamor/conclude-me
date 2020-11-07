@@ -119,7 +119,7 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.trackWeightInputDatePicker -> DatePickerFragment.newInstance(now.year, now.monthValue, now.dayOfMonth).show(parentFragmentManager, "weightDatePicker")
+            R.id.trackWeightInputDatePicker -> DatePickerFragment.newInstance(now.year, now.monthValue - 1, now.dayOfMonth).show(parentFragmentManager, "weightDatePicker")
             R.id.trackWeightInputTimePicker -> TimePickerFragment.newInstance(now.hour, now.minute).show(parentFragmentManager, "weightTimePicker")
             R.id.trackWeightInputButton -> this.insertWeightRecord()
         }
@@ -135,7 +135,7 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
             }
             RESULT_KEY_DATE -> {
                 val year = bundle.getInt(ARG_PARAM_YEAR)
-                val month = bundle.getInt(ARG_PARAM_MONTH)
+                val month = bundle.getInt(ARG_PARAM_MONTH) + 1
                 val day = bundle.getInt(ARG_PARAM_DAY)
 
                 setDatePickerButtonText(year, month, day)

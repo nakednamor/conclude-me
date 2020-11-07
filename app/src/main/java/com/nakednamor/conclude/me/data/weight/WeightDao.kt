@@ -10,7 +10,7 @@ import androidx.room.Query
 interface WeightDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertWeightRecord(record: WeightRecord): Long  // TODO add to repository
+    suspend fun insertWeightRecord(record: WeightRecord): Long
 
     @Query("SELECT * FROM records_weight ORDER BY recorded_at DESC")
     fun getWeightRecordsByRecordingTimeDesc(): LiveData<List<WeightRecord>>

@@ -17,7 +17,6 @@ import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nakednamor.conclude.me.adapter.WeightRecordListAdapter
-import com.nakednamor.conclude.me.data.weight.WeightDao
 import com.nakednamor.conclude.me.data.weight.WeightRecord
 import com.nakednamor.conclude.me.data.weight.WeightRepository
 import com.nakednamor.conclude.me.viewmodels.LastWeightRecordsViewModel
@@ -55,23 +54,11 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
     ): View? {
         val view = inflater.inflate(R.layout.fragment_track_weight_record, container, false)
 
-
-
         initializeDatePicker(view)
         initializeTimePicker(view)
         initializeWeightInput(view)
         initializeAddWeightButton(view)
-
-        val adapter = WeightRecordListAdapter(requireContext())
-        val weightView: RecyclerView = view.findViewById(R.id.lastWeightRecordsView)
-        weightView.adapter = adapter
-        weightView.layoutManager = LinearLayoutManager(this.requireContext())
-
-        viewModel.weightRecords.observe(viewLifecycleOwner) { weightRecords ->
-            weightRecords?.let {
-                adapter.setWeightRecords(it)
-            }
-        }
+        initializeLastRecordsView(view)
 
         return view
     }
@@ -95,6 +82,16 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
     private fun initializeAddWeightButton(view: View) {
         addWeightButton = view.findViewById(R.id.trackWeightInputButton)
         addWeightButton.setOnClickListener(this)
+    }
+
+    private fun initializeLastRecordsView(view: View) {
+        val weightView: RecyclerView = view.findViewById(R.id.lastWeightRecordsView)
+        val context = requireContext()
+        val adapter = WeightRecordListAdapter(context)
+        weightView.adapter = adapter
+        weightView.layoutManager = LinearLayoutManager(context)
+
+        viewModel.weightRecords.observe(viewLifecycleOwner) { weightRecords -> adapter.setWeightRecords(weightRecords) }
     }
 
     private fun setDatePickerButtonText(year: Int, month: Int, day: Int) {

@@ -11,9 +11,16 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.nakednamor.conclude.me.adapter.WeightRecordListAdapter
 import com.nakednamor.conclude.me.data.weight.WeightDao
 import com.nakednamor.conclude.me.data.weight.WeightRecord
+import com.nakednamor.conclude.me.data.weight.WeightRepository
+import com.nakednamor.conclude.me.viewmodels.LastWeightRecordsViewModel
 import com.nakednamor.conclude.me.weight.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -28,7 +35,10 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
     private lateinit var weightInput: EditText
     private lateinit var addWeightButton: Button
 
-    @Inject lateinit var weightDao: WeightDao
+    @Inject
+    lateinit var weightRepository: WeightRepository
+
+    private val viewModel: LastWeightRecordsViewModel by viewModels()
 
     private var now = LocalDateTime.now()
 
@@ -45,10 +55,23 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
     ): View? {
         val view = inflater.inflate(R.layout.fragment_track_weight_record, container, false)
 
+
+
         initializeDatePicker(view)
         initializeTimePicker(view)
         initializeWeightInput(view)
         initializeAddWeightButton(view)
+
+        val adapter = WeightRecordListAdapter(requireContext())
+        val weightView: RecyclerView = view.findViewById(R.id.lastWeightRecordsView)
+        weightView.adapter = adapter
+        weightView.layoutManager = LinearLayoutManager(this.requireContext())
+
+        viewModel.weightRecords.observe(viewLifecycleOwner) { weightRecords ->
+            weightRecords?.let {
+                adapter.setWeightRecords(it)
+            }
+        }
 
         return view
     }
@@ -138,7 +161,7 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
 
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                weightDao.insertWeightRecord(WeightRecord(weight = weight.toFloat(), recordedAt = dateTime))
+                weightRepository.insert(WeightRecord(weight = weight.toFloat(), recordedAt = dateTime))
                 Toast.makeText(context, "weight saved", Toast.LENGTH_SHORT).show()
             } catch (ex: Exception) {
                 Toast.makeText(context, "error while saving weight: " + ex.message, Toast.LENGTH_SHORT).show()

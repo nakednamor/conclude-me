@@ -4,4 +4,5 @@
     <string name="time_picker_text">%1$s:%2$s</string>
     <string name="date_picker_text">%1$d-%2$s-%3$s</string>
     <string name="track_weight_button">Add weight</string>
+    <string name="track_weight_input_hint">For example: 78.4</string>
 </resources>

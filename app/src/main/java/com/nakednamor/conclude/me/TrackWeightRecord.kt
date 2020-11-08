@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nakednamor.conclude.me.adapter.WeightRecordListAdapter
 import com.nakednamor.conclude.me.data.weight.WeightRecord
 import com.nakednamor.conclude.me.data.weight.WeightRepository
+import com.nakednamor.conclude.me.util.NumericTextWatcher
 import com.nakednamor.conclude.me.viewmodels.LastWeightRecordsViewModel
 import com.nakednamor.conclude.me.weight.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -77,6 +78,7 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
 
     private fun initializeWeightInput(view: View) {
         weightInput = view.findViewById(R.id.trackWeightInputNumber)
+        weightInput.addTextChangedListener(NumericTextWatcher(weightInput, 1, getString(R.string.track_weight_input_error)))
     }
 
     private fun initializeAddWeightButton(view: View) {

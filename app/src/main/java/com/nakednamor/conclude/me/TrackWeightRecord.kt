@@ -78,12 +78,13 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
 
     private fun initializeWeightInput(view: View) {
         weightInput = view.findViewById(R.id.trackWeightInputNumber)
-        weightInput.addTextChangedListener(NumericTextWatcher(weightInput, 1, getString(R.string.track_weight_input_error)))
+        weightInput.addTextChangedListener(NumericTextWatcher(weightInput, 1, getString(R.string.track_weight_input_error), this::setAddWeightButtonVisibility))
     }
 
     private fun initializeAddWeightButton(view: View) {
         addWeightButton = view.findViewById(R.id.trackWeightInputButton)
         addWeightButton.setOnClickListener(this)
+        addWeightButton.isEnabled = allInputsValidValue()
     }
 
     private fun initializeLastRecordsView(view: View) {
@@ -167,4 +168,10 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
             }
         }
     }
+
+    private fun setAddWeightButtonVisibility() {
+        addWeightButton.isEnabled = allInputsValidValue()
+    }
+
+    private fun allInputsValidValue() = weightInput.error == null && weightInput.text.isNotEmpty()   // TODO validate if date and time is <= current time
 }

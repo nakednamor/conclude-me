@@ -7,7 +7,8 @@ import android.widget.EditText
 class NumericTextWatcher(
     private val editText: EditText,
     private val decimalDigits: Int = 0,
-    private val errorMessage: String
+    private val errorMessage: String,
+    private val inputChangedCallback: () -> Unit = {}
 ) : TextWatcher {
 
     private val noDecimalDigitsPattern = "[1-9][0-9]*".toRegex()
@@ -24,6 +25,7 @@ class NumericTextWatcher(
             } else {
                 editText.error = null
             }
+            inputChangedCallback()
         }
     }
 }

@@ -78,7 +78,7 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
 
     private fun initializeWeightInput(view: View) {
         weightInput = view.findViewById(R.id.trackWeightInputNumber)
-        weightInput.addTextChangedListener(NumericTextWatcher(weightInput, 1, getString(R.string.track_weight_input_error), this::setAddWeightButtonVisibility))
+        weightInput.addTextChangedListener(NumericTextWatcher(weightInput, 1, getString(R.string.track_weight_input_error), this::updateAddWeightButtonVisibility))
     }
 
     private fun initializeAddWeightButton(view: View) {
@@ -144,20 +144,21 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
                 setDatePickerButtonText(year, month, day)
             }
         }
+
+        val chosenDatetime = getChosenDateTime()
+        if (chosenDatetime.isAfter(now)) {
+            datePickerField.error = getString(R.string.track_weight_datetime_error)
+            timePickerField.error = getString(R.string.track_weight_datetime_error)
+        } else {
+            datePickerField.error = null
+            timePickerField.error = null
+        }
+        updateAddWeightButtonVisibility()
     }
 
     private fun insertWeightRecord() {
-        val weight = weightInput.text.toString()    // TODO check if input valid
-        val dateString = datePickerField.text
-        val timeString = timePickerField.text
-
-        val dateTime = LocalDateTime.of(
-            dateString.split("-")[0].toInt(),
-            dateString.split("-")[1].toInt(),
-            dateString.split("-")[2].toInt(),
-            timeString.split(":")[0].toInt(),
-            timeString.split(":")[1].toInt()
-        )
+        val weight = weightInput.text.toString()
+        val dateTime = getChosenDateTime()
 
         viewLifecycleOwner.lifecycleScope.launch {
             try {
@@ -169,9 +170,22 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
         }
     }
 
-    private fun setAddWeightButtonVisibility() {
+    private fun updateAddWeightButtonVisibility() {
         addWeightButton.isEnabled = allInputsValidValue()
     }
 
-    private fun allInputsValidValue() = weightInput.error == null && weightInput.text.isNotEmpty()   // TODO validate if date and time is <= current time
+    private fun allInputsValidValue() = weightInput.error == null && weightInput.text.isNotEmpty() && getChosenDateTime().isBefore(now)
+
+    private fun getChosenDateTime(): LocalDateTime {
+        val dateString = datePickerField.text
+        val timeString = timePickerField.text
+
+        return LocalDateTime.of(
+            dateString.split("-")[0].toInt(),
+            dateString.split("-")[1].toInt(),
+            dateString.split("-")[2].toInt(),
+            timeString.split(":")[0].toInt(),
+            timeString.split(":")[1].toInt()
+        )
+    }
 }

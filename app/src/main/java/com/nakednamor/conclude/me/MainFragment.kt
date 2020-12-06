@@ -41,7 +41,7 @@ class MainFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_main, container, false)
         view.findViewById<Button>(R.id.button_go_to_track_weight)?.setOnClickListener {
-            Navigation.findNavController(requireView()).navigate(R.id.trackWeightRecord);
+            Navigation.findNavController(requireView()).navigate(R.id.action_mainFragment_to_trackWeightRecord);
         }
 
         return view

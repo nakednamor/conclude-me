@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Conclude Me</string>
     <string name="go_to_track_weight">Track Weight Record</string>
+    <string name="go_to_track_bowel_movement">Track Bowel Movement</string>
     <string name="time_picker_text">%1$s:%2$s</string>
     <string name="date_picker_text">%1$d-%2$s-%3$s</string>
     <string name="track_weight_button">Add weight</string>

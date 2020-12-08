@@ -44,6 +44,10 @@ class MainFragment : Fragment() {
             Navigation.findNavController(requireView()).navigate(R.id.action_mainFragment_to_trackWeightRecord);
         }
 
+        view.findViewById<Button>(R.id.button_go_to_track_bowel_movement)?.setOnClickListener {
+            Navigation.findNavController(requireView()).navigate(R.id.action_mainFragment_to_trackBowelMovement);
+        }
+
         return view
     }
 

@@ -19,9 +19,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nakednamor.conclude.me.adapter.WeightRecordListAdapter
 import com.nakednamor.conclude.me.data.weight.WeightRecord
 import com.nakednamor.conclude.me.data.weight.WeightRepository
+import com.nakednamor.conclude.me.fragement.*
 import com.nakednamor.conclude.me.util.NumericTextWatcher
 import com.nakednamor.conclude.me.viewmodels.LastWeightRecordsViewModel
-import com.nakednamor.conclude.me.weight.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime

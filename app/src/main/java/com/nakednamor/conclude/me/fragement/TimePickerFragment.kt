@@ -1,4 +1,4 @@
-package com.nakednamor.conclude.me.weight
+package com.nakednamor.conclude.me.fragement
 
 import android.app.Dialog
 import android.app.TimePickerDialog

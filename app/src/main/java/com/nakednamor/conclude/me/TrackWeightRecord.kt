@@ -118,8 +118,6 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
 
     private fun initializeTimePickerResultListener() = setFragmentResultListener(RESULT_KEY_TIME, this::onFragmentResult)
 
-    private fun prependZeroIfNeeded(value: Int): String = if (value <= 9) "0$value" else "$value"
-
     override fun onClick(view: View) {
         when (view.id) {
             R.id.trackWeightInputDatePicker -> DatePickerFragment.newInstance(now.year, now.monthValue - 1, now.dayOfMonth).show(parentFragmentManager, "weightDatePicker")
@@ -145,7 +143,7 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
             }
         }
 
-        val chosenDatetime = getChosenDateTime()
+        val chosenDatetime = getChosenDateTime(datePickerField, timePickerField)
         if (chosenDatetime.isAfter(now)) {
             datePickerField.error = getString(R.string.track_weight_datetime_error)
             timePickerField.error = getString(R.string.track_weight_datetime_error)
@@ -158,7 +156,7 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
 
     private fun insertWeightRecord() {
         val weight = weightInput.text.toString()
-        val dateTime = getChosenDateTime()
+        val dateTime = getChosenDateTime(datePickerField, timePickerField)
 
         viewLifecycleOwner.lifecycleScope.launch {
             try {
@@ -174,18 +172,5 @@ class TrackWeightRecord : Fragment(), View.OnClickListener, FragmentResultListen
         addWeightButton.isEnabled = allInputsValidValue()
     }
 
-    private fun allInputsValidValue() = weightInput.error == null && weightInput.text.isNotEmpty() && getChosenDateTime().isBefore(now)
-
-    private fun getChosenDateTime(): LocalDateTime {
-        val dateString = datePickerField.text
-        val timeString = timePickerField.text
-
-        return LocalDateTime.of(
-            dateString.split("-")[0].toInt(),
-            dateString.split("-")[1].toInt(),
-            dateString.split("-")[2].toInt(),
-            timeString.split(":")[0].toInt(),
-            timeString.split(":")[1].toInt()
-        )
-    }
+    private fun allInputsValidValue() = weightInput.error == null && weightInput.text.isNotEmpty() && isChosenDateTimeValid(datePickerField, timePickerField, now)
 }
